@@ -244,15 +244,14 @@ def on_click_inverse_custom_image(custom_image,global_state):
         model="net-lin", net="vgg", use_gpu=True
     )
 
-    image = Image.open(custom_image.name)
+    image = Image.open(custom_image.name).convert("RGB")
 
     pti = PTI(global_state['renderer'].G,percept)
     inversed_img, w_pivot = pti.train(image,state['params']['latent_space'] == 'w+')
     inversed_img = (inversed_img[0] * 127.5 + 128).clamp(0, 255).to(torch.uint8).permute(1, 2, 0)
     inversed_img = inversed_img.cpu().numpy()
     inversed_img = Image.fromarray(inversed_img)
-    global_state['images']['image_show'] = Image.fromarray(
-            add_watermark_np(np.array(inversed_img)))
+    global_state['images']['image_show'] = inversed_img
 
     global_state['images']['image_orig'] = inversed_img
     global_state['images']['image_raw'] = inversed_img
@@ -288,8 +287,7 @@ def on_reset_custom_image(global_state):
     init_image = state['generator_params'].image
     state['images']['image_orig'] = init_image
     state['images']['image_raw'] = init_image
-    state['images']['image_show'] = Image.fromarray(
-        add_watermark_np(np.array(init_image)))
+    state['images']['image_show'] = init_image
     state['mask'] = np.ones((init_image.size[1], init_image.size[0]),
                             dtype=np.uint8)
     return state, state['images']['image_show']

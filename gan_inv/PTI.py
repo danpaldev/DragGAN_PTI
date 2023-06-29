@@ -16,7 +16,7 @@ class PTI:
         self.max_pti_step = max_pti_step
         self.pti_lr = pti_lr
     def cacl_loss(self,percept, generated_image,real_image):
-
+        generated_image = F.interpolate(generated_image, size=(256, 256))
         mse_loss = F.mse_loss(generated_image, real_image)
         p_loss = percept(generated_image, real_image).sum()
         loss = p_loss +self.l2_lambda * mse_loss
