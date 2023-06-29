@@ -12,7 +12,7 @@ import dnnlib
 from gradio_utils import (ImageMask, draw_mask_on_image, draw_points_on_image,
                           get_latest_points_pair, get_valid_mask,
                           on_change_single_global_state)
-from viz.renderer import Renderer, add_watermark_np
+from viz.renderer import Renderer
 from gan_inv.inversion import PTI
 from gan_inv.lpips import util
 parser = ArgumentParser()
@@ -88,8 +88,9 @@ def init_images(global_state):
     init_image = state['generator_params'].image
     state['images']['image_orig'] = init_image
     state['images']['image_raw'] = init_image
-    state['images']['image_show'] = Image.fromarray(
-        add_watermark_np(np.array(init_image)))
+    # state['images']['image_show'] = Image.fromarray(
+    #     add_watermark_np(np.array(init_image)))
+    state['images']['image_show'] = init_image
     state['mask'] = np.ones((init_image.size[1], init_image.size[0]),
                             dtype=np.uint8)
     return global_state
@@ -102,7 +103,7 @@ def update_image_draw(image, points, mask, show_mask, global_state=None):
             mask == 1).all():
         image_draw = draw_mask_on_image(image_draw, mask)
 
-    image_draw = Image.fromarray(add_watermark_np(np.array(image_draw)))
+    #image_draw = Image.fromarray(add_watermark_np(np.array(image_draw)))
     if global_state is not None:
         global_state['images']['image_show'] = image_draw
     return image_draw
