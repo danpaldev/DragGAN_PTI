@@ -7,3 +7,6 @@ hf_transfer
 pyopengl
 imgui
 glfw
+imageio
+scikit-image
+ipython
